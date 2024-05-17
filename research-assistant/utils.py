@@ -1,8 +1,9 @@
 from langchain_community.utilities import DuckDuckGoSearchAPIWrapper
 from bs4 import BeautifulSoup
 
-import requests
+import io
 import markdown
+import requests
 from weasyprint import HTML
 
 RESULTS_PER_QUESTION = 3
@@ -38,4 +39,7 @@ def web_search(query: str, num_results: int = RESULTS_PER_QUESTION):
 
 def download_as_pdf(results):
   content = markdown.markdown(results)
-  HTML(string=content).write_pdf("report.pdf")
+  pdf_file = io.BytesIO()
+  HTML(string=content).write_pdf(pdf_file)
+  pdf_file.seek(0)
+  return pdf_file.getvalue()

@@ -9,6 +9,7 @@ from prompts import generate_webpage_summary_template, generate_search_queries_p
 from utils import scrape_text, flatten_list_of_list, web_search, download_as_pdf
 
 import json
+import streamlit as st
 
 load_dotenv()
 
@@ -51,10 +52,49 @@ prompt = ChatPromptTemplate.from_messages(
 chain = RunnablePassthrough.assign(
   context = full_research_chain | flatten_list_of_list) | prompt | ChatOpenAI(model="gpt-3.5-turbo-1106") | StrOutputParser()
 
-results = chain.invoke(
-  {
-    "question": "How to implement FAIR CyberSecurity Risk framework for an Online Banking System?",
-  }
-)
+# results = chain.invoke(
+#   {
+#     "question": "How to implement FAIR CyberSecurity Risk framework for an Online Banking System?",
+#   }
+# )
 
-download_as_pdf(results)
+# download_as_pdf(results)
+
+# Initialize session state variables
+if "generating" not in st.session_state:
+    st.session_state.generating = False
+if "results" not in st.session_state:
+    st.session_state.results = None
+
+# Streamlit UI
+st.title("Research Assistant")
+st.write("Enter a topic to generate a research report:")
+
+topic = st.text_input("Topic")
+
+# Disable the button if the report is generating
+button_clicked = st.button("Generate Report", disabled=st.session_state.generating)
+
+if button_clicked:
+    st.session_state.generating = True
+
+if st.session_state.generating:
+    with st.spinner("Generating report..."):
+        results = chain.invoke({"question": topic})
+        st.session_state.results = results
+        st.session_state.generating = False
+        st.success("Report generated successfully!")
+
+# Display the results if available
+if st.session_state.results:
+    st.write(st.session_state.results)
+    pdf_data = download_as_pdf(st.session_state.results)
+    if pdf_data:
+        st.download_button(
+            label="Download Report as PDF",
+            data=pdf_data,
+            file_name="research_report.pdf",
+            mime="application/pdf"
+        )
+    else:
+        st.error("Failed to generate PDF.")
