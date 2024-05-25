@@ -38,7 +38,7 @@ search_question_chain = SEARCH_PROMPT | ChatOpenAI(model="gpt-3.5-turbo-1106", t
 
 full_research_chain = search_question_chain | (lambda x: [{"question": q} for q in x]) | web_search_chain.map()
 
-WRITER_SYSTEM_PROMPT = "You are an AI critical thinker research assistant. Your sole purpose is to write well written, criticallycritically acclaimed, objective and structured reports on given text."
+WRITER_SYSTEM_PROMPT = "You are an AI critical thinker research assistant. Your sole purpose is to write well written, critically acclaimed, objective and structured reports on given text."
 
 RESEARCH_REPORT_PROMPT = generate_research_report_prompt()
 
