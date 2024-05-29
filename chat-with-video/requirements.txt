@@ -1,0 +1,10 @@
+langchain
+langchain_community
+langchain-openai
+openai
+python-dotenv
+ffmpeg
+requests
+streamlit
+ffmpeg-python
+langchain-pinecone

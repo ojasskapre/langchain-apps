@@ -49,7 +49,7 @@ streamlit run main.py
 
 ## Demo
 
-[![Watch the Demo Here](./research-assistant-app.png)](https://youtu.be/CtzieIgcaIA)
+[Watch the Demo Here](https://youtu.be/CtzieIgcaIA)
 
 ## Chains Explanation
 
